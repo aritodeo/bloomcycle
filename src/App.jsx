@@ -169,7 +169,7 @@ export default function App() {
     return !localStorage.getItem('bloomcycle_onboarded')
   })
   const [user, setUser] = useState(null)
-const [showLogin, setShowLogin] = useState(false)
+const [showLogin, setShowLogin] = useState(true)
 
 useEffect(() => {
   onAuthStateChanged(auth, (firebaseUser) => {
