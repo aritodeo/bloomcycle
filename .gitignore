@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.env
+git rm --cached .env
+git add .
+git commit -m "Remove API key from repo"
+git push -u origin main

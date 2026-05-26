@@ -5,15 +5,15 @@ const MAIN_TABS = {
   en: [
     { id: 'home',     label: 'Home',     icon: '🌸' },
     { id: 'track',    label: 'Track',    icon: '📊' },
+    { id: 'ai',       label: 'AI',       icon: '✨' },
     { id: 'wellness', label: 'Wellness', icon: '🌿' },
-    { id: 'community',label: 'Community',icon: '💬' },
     { id: 'more',     label: 'More',     icon: '⚡' },
   ],
   hi: [
     { id: 'home',     label: 'होम',      icon: '🌸' },
     { id: 'track',    label: 'ट्रैक',    icon: '📊' },
+    { id: 'ai',       label: 'AI',       icon: '✨' },
     { id: 'wellness', label: 'वेलनेस',   icon: '🌿' },
-    { id: 'community',label: 'समुदाय',   icon: '💬' },
     { id: 'more',     label: 'और',       icon: '⚡' },
   ],
 }
@@ -28,6 +28,8 @@ const MORE_MENU = {
     { id: 'pain',      label: 'Pain Relief', icon: '🌙' },
     { id: 'report',    label: 'Dr Report',  icon: '🩺' },
     { id: 'reminders', label: 'Reminders',  icon: '🔔' },
+    { id: 'info',      label: 'PCOD Info',  icon: '📚' },
+    { id: 'hormone',   label: 'Hormones',   icon: '🧬' },
   ],
   hi: [
     { id: 'score',     label: 'PCOD टेस्ट', icon: '🎯' },
@@ -38,17 +40,20 @@ const MORE_MENU = {
     { id: 'pain',      label: 'दर्द राहत',  icon: '🌙' },
     { id: 'report',    label: 'डॉ रिपोर्ट', icon: '🩺' },
     { id: 'reminders', label: 'रिमाइंडर',   icon: '🔔' },
+    { id: 'info',      label: 'PCOD जानकारी', icon: '📚' },
+    { id: 'hormone',   label: 'हार्मोन',    icon: '🧬' },
   ],
 }
 
-const HOME_TABS = ['cycle', 'ai', 'journal']
+const HOME_TABS = ['cycle', 'ai', 'journal', 'dashboard']
 const TRACK_TABS = ['symptoms', 'water', 'bmi', 'sleep']
 const WELLNESS_TABS = ['tips', 'recipes', 'yoga', 'ayurvedic', 'pain']
 
 const getMainTab = (activeTab) => {
-  if (HOME_TABS.includes(activeTab) || activeTab === 'home') return 'home'
-  if (TRACK_TABS.includes(activeTab) || activeTab === 'track') return 'track'
-  if (WELLNESS_TABS.includes(activeTab) || activeTab === 'wellness') return 'wellness'
+  if (HOME_TABS.includes(activeTab)) return 'home'
+  if (activeTab === 'ai') return 'ai'
+  if (TRACK_TABS.includes(activeTab)) return 'track'
+  if (WELLNESS_TABS.includes(activeTab)) return 'wellness'
   if (activeTab === 'community') return 'community'
   return 'more'
 }
@@ -65,19 +70,18 @@ export default function BottomNav({ activeTab, setActiveTab, lang }) {
       setShowMore(prev => !prev)
       return
     }
-    if (id === 'home') setActiveTab('cycle')
+    if (id === 'home') setActiveTab('dashboard')
     else if (id === 'track') setActiveTab('symptoms')
+    else if (id === 'ai') setActiveTab('ai')
     else if (id === 'wellness') setActiveTab('tips')
     else if (id === 'community') setActiveTab('community')
   }
 
   return (
     <>
-      {/* More menu popup */}
       <AnimatePresence>
         {showMore && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -85,7 +89,6 @@ export default function BottomNav({ activeTab, setActiveTab, lang }) {
               onClick={() => setShowMore(false)}
               style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 150 }}
             />
-            {/* Menu */}
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
@@ -114,7 +117,6 @@ export default function BottomNav({ activeTab, setActiveTab, lang }) {
         )}
       </AnimatePresence>
 
-      {/* Bottom nav */}
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(10px)', borderTop: '1px solid var(--pink-200)', display: 'flex', zIndex: 200, boxShadow: '0 -4px 20px rgba(212,83,126,0.1)' }}>
         {mainTabs.map(item => {
           const isActive = activeMain === item.id

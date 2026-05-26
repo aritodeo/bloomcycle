@@ -61,7 +61,6 @@ body {
   flex-direction: column;
   background: linear-gradient(135deg, #FDF6F9 0%, #EEEDFE 100%);
 }
-
 button {
   font-family: var(--font-body);
   cursor: pointer;
@@ -151,4 +150,169 @@ input:focus, textarea:focus, select:focus {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+/* Premium Glassmorphism */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px rgba(212, 83, 126, 0.1);
+}
+
+/* Premium gradient text */
+.gradient-pink {
+  background: linear-gradient(135deg, #D4537E, #7F77DD);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(212, 83, 126, 0.2);
+}
+
+/* Beautiful scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #D4537E, #7F77DD); border-radius: 99px; }
+
+/* Pulse animation */
+@keyframes gentlePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,83,126,0.3); }
+  50% { box-shadow: 0 0 0 10px rgba(212,83,126,0); }
+}
+
+.pulse { animation: gentlePulse 2s infinite; }
+
+/* Wave animation */
+@keyframes wave {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.wave { animation: wave 1s ease-in-out infinite; }
+
+/* Shine effect */
+@keyframes shine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shine {
+  background: linear-gradient(90deg, #D4537E, #7F77DD, #D4537E);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s linear infinite;
+}
+
+/* Card hover */
+.card-hover {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(212,83,126,0.2);
+}
+
+/* Bottom nav blur */
+.nav-blur {
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Page transition */
+.page-enter {
+  animation: fadeIn 0.4s ease forwards;
+}
+/* ===== MOBILE RESPONSIVENESS ===== */
+
+/* Small phones (320px - 480px) */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  /* Header */
+  header {
+    padding: 10px 14px !important;
+  }
+
+  /* Cards */
+  .premium-card {
+    padding: 14px !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Grid adjustments */
+  div[style*="grid-template-columns: repeat(3"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+    gap: 6px !important;
+  }
+
+  div[style*="grid-template-columns: repeat(4"] {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+  }
+}
+
+/* Tablets (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+/* Large screens - center the app */
+@media (min-width: 769px) {
+  #root {
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(135deg, #FBEAF0 0%, #EEEDFE 100%);
+  }
+
+  .app-container {
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 0 60px rgba(212,83,126,0.15);
+  }
+}
+
+/* Fix overflow issues */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix button tap highlight on mobile */
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Fix input zoom on iOS */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
+/* Fix bottom nav on mobile */
+nav {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Smooth scrolling on mobile */
+main {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
