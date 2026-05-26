@@ -20,6 +20,9 @@ import HormoneTracker from './pages/HormoneTracker'
 import PCODInfo from './pages/PCODInfo'
 import Dashboard from './pages/Dashboard'
 import Onboarding from './pages/Onboarding'
+import LoginPage from './pages/LoginPage'
+import { auth } from './firebase'
+import { onAuthStateChanged } from 'firebase/auth'
 import BottomNav from './components/BottomNav'
 import Header from './components/Header'
 
@@ -165,6 +168,17 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('bloomcycle_onboarded')
   })
+  const [user, setUser] = useState(null)
+const [showLogin, setShowLogin] = useState(false)
+
+useEffect(() => {
+  onAuthStateChanged(auth, (firebaseUser) => {
+    if (firebaseUser) {
+      setUser(firebaseUser)
+      setShowLogin(false)
+    }
+  })
+}, [])
   const [lang, setLang] = useState(() => {
     return localStorage.getItem('bloomcycle_lang') || 'en'
   })
@@ -222,7 +236,9 @@ export default function App() {
     <AnimatePresence mode="wait">
       {showSplash ? (
         <SplashScreen key="splash" onDone={() => setShowSplash(false)} />
-      ) : showOnboarding ? (
+      ) : showLogin ? (
+  <LoginPage key="login" onLogin={(user) => { setUser(user); setShowLogin(false) }} lang={lang} />
+) : showOnboarding ? (
         <Onboarding key="onboarding" onDone={() => {
           setShowOnboarding(false)
           localStorage.setItem('bloomcycle_onboarded', 'true')
@@ -236,7 +252,7 @@ export default function App() {
         >
           <FloatingPetals />
           <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Header activeTab={activeTab} cycleData={cycleData} lang={lang} setLang={setLang} />
+           <Header activeTab={activeTab} cycleData={cycleData} lang={lang} setLang={setLang} user={user} onLogout={() => { auth.signOut(); setUser(null); setShowLogin(true) }} />
             <main style={{ flex: 1, overflowY: 'auto', paddingBottom: 80 }}>
               <AnimatePresence mode="wait">
                 <motion.div

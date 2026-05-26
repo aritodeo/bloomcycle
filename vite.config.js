@@ -7,7 +7,6 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico'],
       manifest: {
         name: 'BloomCycle - PCOD Tracker',
         short_name: 'BloomCycle',
@@ -20,14 +19,9 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: 'https://emojicdn.elk.sh/🌸?style=apple',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: 'https://emojicdn.elk.sh/🌸?style=apple',
-            sizes: '512x512',
-            type: 'image/png',
+            src: '/favicon.ico',
+            sizes: '64x64',
+            type: 'image/x-icon',
           },
         ],
       },

@@ -5,7 +5,7 @@ const TEXT = {
   hi: { cycle: 'मेरा चक्र', symptoms: 'लक्षण लॉग', reminders: 'रिमाइंडर', tips: 'वेलनेस टिप्स', ai: 'AI अंतर्दृष्टि', next: 'अगला मासिक', days: 'दिन में', journal: 'मूड जर्नल', recipes: 'PCOD रेसिपी', yoga: 'योग और व्यायाम', report: 'डॉक्टर रिपोर्ट', community: 'समुदाय', score: 'PCOD टेस्ट', ayurvedic: 'आयुर्वेद', water: 'पानी ट्रैकर', bmi: 'BMI ट्रैकर', sleep: 'नींद ट्रैकर', pain: 'दर्द राहत', hormone: 'हार्मोन ट्रैकर', info: 'PCOD जानकारी', dashboard: 'होम' },
 }
 
-export default function Header({ activeTab, cycleData, lang, setLang }) {
+export default function Header({ activeTab, cycleData, lang, setLang, user, onLogout }) {
   const { today, periodDays, fertileDays, daysUntilNext } = cycleData
   const t = TEXT[lang]
 
@@ -61,23 +61,15 @@ export default function Header({ activeTab, cycleData, lang, setLang }) {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            whileHover={{ scale: 1.05 }}
-            onClick={() => setLang(lang === 'en' ? 'hi' : 'en')}
-            style={{
-              padding: '5px 12px',
-              borderRadius: 99,
-              border: '1px solid rgba(212,83,126,0.2)',
-              background: 'rgba(212,83,126,0.08)',
-              fontSize: 12,
-              fontWeight: 600,
-              color: '#D4537E',
-              cursor: 'pointer',
-            }}
-          >
-            {lang === 'en' ? '🇮🇳 हिंदी' : '🇬🇧 EN'}
-          </motion.button>
+          {user && (
+  <motion.div
+    whileTap={{ scale: 0.9 }}
+    style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}
+    onClick={onLogout}
+  >
+    <img src={user.photoURL} width="32" height="32" style={{ borderRadius: '50%', border: '2px solid var(--pink-400)' }} alt="user" />
+  </motion.div>
+)}
 
           <motion.div
             animate={{ boxShadow: ['0 0 0 0 rgba(212,83,126,0.3)', '0 0 0 8px rgba(212,83,126,0)', '0 0 0 0 rgba(212,83,126,0)'] }}
