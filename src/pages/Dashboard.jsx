@@ -27,11 +27,11 @@ const GREETINGS = {
   night: { en: 'Good Night', hi: 'शुभ रात्रि', emoji: '🌙' },
 }
 
-export default function Dashboard({ cycleData, logs, setActiveTab, lang }) {
+export default function Dashboard({ cycleData, logs, setActiveTab, lang, user }) {
   const hour = new Date().getHours()
   const greeting = hour < 12 ? GREETINGS.morning : hour < 17 ? GREETINGS.afternoon : hour < 20 ? GREETINGS.evening : GREETINGS.night
-
   const quote = QUOTES[new Date().getDate() % QUOTES.length]
+  const firstName = user?.displayName?.split(' ')[0] || ''
 
   const score = useMemo(() => {
     let s = 40
@@ -54,14 +54,29 @@ export default function Dashboard({ cycleData, logs, setActiveTab, lang }) {
   return (
     <div style={{ padding: '20px 16px' }}>
 
-      {/* Greeting */}
+      {/* Personalized Greeting */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 24, marginBottom: 4 }}>{greeting.emoji}</div>
-        <div style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 600, background: 'linear-gradient(135deg, #D4537E, #7F77DD)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          {lang === 'en' ? greeting.en : greeting.hi}!
-        </div>
-        <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
-          {lang === 'en' ? `Cycle Day ${cycleData.today} · Next period in ${cycleData.daysUntilNext} days` : `चक्र दिन ${cycleData.today} · अगला मासिक ${cycleData.daysUntilNext} दिन में`}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 24, marginBottom: 4 }}>{greeting.emoji}</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, background: 'linear-gradient(135deg, #D4537E, #7F77DD)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              {lang === 'en' ? greeting.en : greeting.hi}{firstName ? `, ${firstName}` : ''}!
+            </div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
+              {lang === 'en' ? `Cycle Day ${cycleData.today} · Next period in ${cycleData.daysUntilNext} days` : `चक्र दिन ${cycleData.today} · अगला मासिक ${cycleData.daysUntilNext} दिन में`}
+            </div>
+          </div>
+          {user && (
+            <motion.img
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200 }}
+              src={user.photoURL}
+              width="52" height="52"
+              style={{ borderRadius: '50%', border: '3px solid var(--pink-400)', boxShadow: '0 4px 12px rgba(212,83,126,0.3)' }}
+              alt="profile"
+            />
+          )}
         </div>
       </motion.div>
 
@@ -71,7 +86,7 @@ export default function Dashboard({ cycleData, logs, setActiveTab, lang }) {
         className="card-hover"
         style={{ background: 'linear-gradient(135deg, #D4537E, #7F77DD)', borderRadius: 'var(--radius-xl)', padding: '24px', marginBottom: 16, color: 'white', boxShadow: '0 8px 32px rgba(212,83,126,0.3)', position: 'relative', overflow: 'hidden' }}
       >
-          <div style={{ position: 'absolute', top: -30, right: -30, fontSize: 120, opacity: 0.08 }}>🌸</div>
+        <div style={{ position: 'absolute', top: -30, right: -30, fontSize: 120, opacity: 0.08 }}>🌸</div>
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 8 }}>✨ {lang === 'en' ? "Today's Wellness Score" : 'आज का वेलनेस स्कोर'}</div>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, marginBottom: 16 }}>
@@ -109,10 +124,7 @@ export default function Dashboard({ cycleData, logs, setActiveTab, lang }) {
           { label: lang === 'en' ? 'Logs' : 'लॉग', value: logs.length, icon: '📝', color: '#7F77DD', bg: '#EEEDFE' },
           { label: lang === 'en' ? 'Days left' : 'दिन बचे', value: cycleData.daysUntilNext, icon: '⏰', color: '#1D9E75', bg: '#E1F5EE' },
         ].map((stat, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 + i * 0.1 }}
+          <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + i * 0.1 }}
             style={{ background: stat.bg, borderRadius: 'var(--radius-lg)', padding: '14px 10px', textAlign: 'center', border: `1px solid ${stat.color}20` }}
           >
             <div style={{ fontSize: 22, marginBottom: 4 }}>{stat.icon}</div>
@@ -132,17 +144,14 @@ export default function Dashboard({ cycleData, logs, setActiveTab, lang }) {
           <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--pink-400)', marginBottom: 8, letterSpacing: 1 }}>
             💝 {lang === 'en' ? 'QUOTE OF THE DAY' : 'आज का विचार'}
           </div>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, color: 'var(--pink-600)', lineHeight: 1.7, fontStyle: 'italic' }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: 15, color: 'var(--pink-600)', lineHeight: 1.7, fontStyle: 'italic' }}>
             "{lang === 'en' ? quote.en : quote.hi}"
           </div>
         </div>
       </motion.div>
 
       {/* Quick actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-        style={{ marginBottom: 16 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ marginBottom: 16 }}>
         <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 12 }}>
           ⚡ {lang === 'en' ? 'Quick actions' : 'त्वरित क्रियाएं'}
         </div>
@@ -195,6 +204,7 @@ export default function Dashboard({ cycleData, logs, setActiveTab, lang }) {
           })}
         </div>
       </motion.div>
+
     </div>
   )
 }
