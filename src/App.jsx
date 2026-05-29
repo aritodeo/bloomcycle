@@ -21,7 +21,7 @@ import PCODInfo from './pages/PCODInfo'
 import Dashboard from './pages/Dashboard'
 import Onboarding from './pages/Onboarding'
 import LoginPage from './pages/LoginPage'
-import { auth } from './firebase'
+import { auth, saveUserData, getUserData } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import BottomNav from './components/BottomNav'
 import Header from './components/Header'
@@ -171,32 +171,43 @@ export default function App() {
   const [user, setUser] = useState(null)
 const [showLogin, setShowLogin] = useState(true)
 
-useEffect(() => {
-  onAuthStateChanged(auth, (firebaseUser) => {
-    if (firebaseUser) {
-      setUser(firebaseUser)
-      setShowLogin(false)
-    }
-  })
-}, [])
-  const [lang, setLang] = useState(() => {
+const [lang, setLang] = useState(() => {
     return localStorage.getItem('bloomcycle_lang') || 'en'
   })
 
   useEffect(() => {
+  onAuthStateChanged(auth, async (firebaseUser) => {
+    if (firebaseUser) {
+      setUser(firebaseUser)
+      setShowLogin(false)
+      const userData = await getUserData(firebaseUser.uid)
+      if (userData) {
+        if (userData.logs) setLogs(userData.logs)
+        if (userData.reminders) setReminders(userData.reminders)
+        if (userData.periodStart) setPeriodStart(userData.periodStart)
+        if (userData.lang) setLang(userData.lang)
+      }
+    }
+  })
+}, [])
+  useEffect(() => {
     localStorage.setItem('bloomcycle_reminders', JSON.stringify(reminders))
+    if (user) saveUserData(user.uid, { reminders })
   }, [reminders])
 
   useEffect(() => {
     localStorage.setItem('bloomcycle_logs', JSON.stringify(logs))
+    if (user) saveUserData(user.uid, { logs })
   }, [logs])
 
   useEffect(() => {
     localStorage.setItem('bloomcycle_period', periodStart)
+    if (user) saveUserData(user.uid, { periodStart })
   }, [periodStart])
 
   useEffect(() => {
     localStorage.setItem('bloomcycle_lang', lang)
+    if (user) saveUserData(user.uid, { lang })
   }, [lang])
 
   const cycleData = {
